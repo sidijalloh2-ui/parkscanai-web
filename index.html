@@ -209,7 +209,15 @@ footer .fl a:hover{color:#fff}
 .dispute .drow{display:grid;grid-template-columns:330px 1fr;gap:36px;align-items:start;margin-top:42px}
 .dcard{position:relative;overflow:hidden}
 .dcard::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;background:radial-gradient(220px circle at var(--mx,-300px) var(--my,-300px),rgba(139,124,255,.8),transparent 45%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
-.ticket{position:relative;background:#f1e6c4;color:#2a2517;border-radius:16px;padding:20px 22px;transform:rotate(-1.6deg);box-shadow:0 22px 55px -22px rgba(0,0,0,.75);font-family:'Space Grotesk',sans-serif}
+.ticket{position:relative;background:#ffffff;color:#1b1b22;border-radius:16px;padding:20px 22px;transform:rotate(-1.6deg);box-shadow:0 22px 55px -22px rgba(0,0,0,.75);font-family:'Space Grotesk',sans-serif}
+.pro-pill{background:rgba(139,124,255,.16);color:#c3b8ff;border:1px solid rgba(139,124,255,.36);font-size:11px;font-weight:600;letter-spacing:.06em;padding:4px 11px;border-radius:999px;text-transform:uppercase}
+.dhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.dhead .eyebrow{margin-bottom:0}
+.dtoggle{display:inline-flex;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:11px;padding:4px;margin-bottom:16px;gap:4px}
+.dtog{background:transparent;border:0;color:var(--mut);font-family:'Inter',sans-serif;font-size:13px;padding:7px 14px;border-radius:8px;cursor:pointer;transition:background .2s,color .2s}
+.dtog.active{background:rgba(139,124,255,.16);color:#c3b8ff}
+.meter.weak .mfill{background:linear-gradient(90deg,#e2574a,#f0a24a)}
+.meter.weak #mpct{color:#f0824a}
 .tk-top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px dashed rgba(42,37,23,.3);padding-bottom:12px;margin-bottom:14px}
 .tk-top span{font-weight:700;font-size:12.5px;letter-spacing:.06em}
 .tk-badge{background:#c0392b;color:#fff;padding:4px 10px;border-radius:7px;font-size:14px;font-weight:700}
@@ -241,19 +249,23 @@ footer .fl a:hover{color:#fff}
 @media(max-width:820px){.dispute .drow{grid-template-columns:1fr;gap:28px}}
 </style>
 <section class="dispute" id="dispute"><div class="wrap">
-  <div class="eyebrow">Fight tickets</div>
+  <div class="dhead"><div class="eyebrow">Fight tickets</div><span class="pro-pill">Pro feature</span></div>
   <h2 class="sec">Got a ticket anyway?<br><span class="grad">Let AI fight it.</span></h2>
-  <p class="lead">Snap the ticket. ParkScan grades your case honestly — then drafts a dispute letter you can actually send.</p>
+  <p class="lead">Snap the ticket and ParkScan grades your case honestly — then drafts a dispute letter when you actually have a shot. Included with ParkScan Pro.</p>
   <div class="drow">
     <div class="dleft">
+      <div class="dtoggle" id="dtoggle">
+        <button class="dtog active" data-c="strong">Strong case</button>
+        <button class="dtog" data-c="weak">Weak case</button>
+      </div>
       <div class="ticket dcard" id="ticket">
-        <div class="tk-top"><span>NOTICE OF VIOLATION</span><span class="tk-badge">$65.00</span></div>
+        <div class="tk-top"><span>NOTICE OF VIOLATION</span><span class="tk-badge" id="tkfine">$65.00</span></div>
         <div class="tk-rows">
-          <div><small>Citation</small><b>#A4471982</b></div>
+          <div><small>Citation</small><b id="tkcite">#A4471982</b></div>
           <div><small>Plate</small><b>8XKP·221</b></div>
-          <div><small>Location</small><b>N 3rd St</b></div>
-          <div><small>Date · time</small><b>Fri · 6:29 PM</b></div>
-          <div class="tk-viol"><small>Violation</small><b>PARKED IN LOADING ZONE</b></div>
+          <div><small>Location</small><b id="tkloc">N 3rd St</b></div>
+          <div><small>Date · time</small><b id="tkdt">Fri · 6:29 PM</b></div>
+          <div class="tk-viol"><small>Violation</small><b id="tkviol">PARKED IN LOADING ZONE</b></div>
         </div>
         <div class="scanline dscan"></div>
       </div>
@@ -261,13 +273,13 @@ footer .fl a:hover{color:#fff}
       <div class="meter" id="meter">
         <div class="mlabel"><span>Case strength</span><span id="mpct">—</span></div>
         <div class="mbar"><div class="mfill" id="mfill"></div></div>
-        <div class="mnote" id="mnote">ParkScan reads your ticket, then rates your odds — honestly.</div>
+        <div class="mnote" id="mnote">Pick a ticket, then let ParkScan rate your odds — honestly.</div>
       </div>
     </div>
     <div class="dright">
       <div class="letter dcard" id="letter">
-        <div class="lt-head"><span class="lt-dot"></span> ParkScan · dispute draft</div>
-        <div class="lt-body" id="ltbody"><span class="ph">Tap “Draft my defense” — ParkScan reads the ticket and writes your case, citing the exact sign rules.</span></div>
+        <div class="lt-head"><span class="lt-dot"></span> <span id="lthead">ParkScan Pro · dispute draft</span></div>
+        <div class="lt-body" id="ltbody"><span class="ph">Tap “Draft my defense” — ParkScan reads the ticket and either writes your case or tells you straight when you don’t have one.</span></div>
         <div class="lt-foot" id="ltfoot"><span class="lt-ready">✓ Ready to send</span><button class="lt-copy" id="ltcopy">Copy letter</button></div>
       </div>
     </div>
@@ -275,25 +287,39 @@ footer .fl a:hover{color:#fff}
 </div></section>
 <script>
 (function(){
+  var CASES={
+    strong:{fine:'$65.00',cite:'#A4471982',loc:'N 3rd St',dt:'Fri · 6:29 PM',viol:'PARKED IN LOADING ZONE',pct:82,tone:'good',
+      note:"Strong — the sign was on your side. Worth disputing.",lthead:'ParkScan Pro · dispute draft',foot:true,
+      body:"To: Bureau of Administrative Adjudication\nRe: Citation #A4471982\n\nI'm contesting this citation. The posted sign permits 3-Hour Parking from 4:00–10:00 PM, Mon–Sat. My vehicle was parked at 6:29 PM on a weekday — within the permitted window — with the meter paid.\n\nThe “Loading Only” 30-minute limit applies to the opposite arrow (→), not this space. I respectfully request that this citation be dismissed.\n\n— [Your name]"},
+    weak:{fine:'$60.00',cite:'#B8830512',loc:'Pine St',dt:'Tue · 9:14 AM',viol:'STREET CLEANING · NO PARKING',pct:13,tone:'bad',
+      note:"Weak — street cleaning was clearly posted and in effect.",lthead:'ParkScan Pro · honest verdict',foot:false,
+      body:"Honest call: you don't have a case here.\n\nThe sign clearly posted “No Parking · Street Cleaning · Tue 8–10 AM,” and the ticket was issued Tuesday at 9:14 AM — squarely inside the restriction.\n\nParkScan won't draft a defense it can't stand behind. Your best move: pay early — many cities cut the fine if you pay within a few days."}
+  };
+  var cur='strong';
   var ticket=document.getElementById('ticket'),btn=document.getElementById('dbtn'),meter=document.getElementById('meter');
   var mfill=document.getElementById('mfill'),mpct=document.getElementById('mpct'),mnote=document.getElementById('mnote');
-  var ltbody=document.getElementById('ltbody'),ltfoot=document.getElementById('ltfoot'),ltcopy=document.getElementById('ltcopy'),letter=document.getElementById('letter');
-  var LETTER="To: Bureau of Administrative Adjudication\nRe: Citation #A4471982\n\nI'm contesting this citation. The posted sign permits 3-Hour Parking from 4:00–10:00 PM, Mon–Sat. My vehicle was parked at 6:29 PM on a weekday — within the permitted window — with the meter paid.\n\nThe “Loading Only” 30-minute limit applies to the opposite arrow (→), not this space. I respectfully request that this citation be dismissed.\n\n— [Your name]";
+  var ltbody=document.getElementById('ltbody'),ltfoot=document.getElementById('ltfoot'),ltcopy=document.getElementById('ltcopy'),letter=document.getElementById('letter'),lthead=document.getElementById('lthead');
   window.addEventListener('pointermove',function(e){[ticket,letter].forEach(function(el){var r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px');});});
+  function fill(c){document.getElementById('tkfine').textContent=c.fine;document.getElementById('tkcite').textContent=c.cite;document.getElementById('tkloc').textContent=c.loc;document.getElementById('tkdt').textContent=c.dt;document.getElementById('tkviol').textContent=c.viol;}
   function typeIt(el,txt,done){el.textContent='';var i=0;(function t(){if(i<=txt.length){el.textContent=txt.slice(0,i++);setTimeout(t,9);}else if(done)done();})();}
   function countUp(to){var v=0;var iv=setInterval(function(){v+=3;if(v>=to){v=to;clearInterval(iv);}mpct.textContent=v+'%';},26);}
+  function reset(){meter.classList.remove('on','weak');mfill.classList.remove('go');mfill.style.width='0';mpct.textContent='—';ltfoot.classList.remove('on');mnote.textContent='Pick a ticket, then let ParkScan rate your odds — honestly.';lthead.textContent='ParkScan Pro · dispute draft';ltbody.innerHTML='<span class="ph">Tap “Draft my defense” — ParkScan reads the ticket and either writes your case or tells you straight when you don’t have one.</span>';btn.disabled=false;btn.textContent='Draft my defense';}
+  function select(k){cur=k;fill(CASES[k]);reset();document.querySelectorAll('.dtog').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-c')===k);});}
   btn.addEventListener('click',function(){
-    ltfoot.classList.remove('on');meter.classList.remove('on');mfill.classList.remove('go');mfill.style.width='0';mpct.textContent='—';
+    var c=CASES[cur];
+    ltfoot.classList.remove('on');meter.classList.remove('on','weak');mfill.classList.remove('go');mfill.style.width='0';mpct.textContent='—';
     ticket.classList.add('analyzing');btn.disabled=true;btn.textContent='Reading ticket…';
     setTimeout(function(){
       ticket.classList.remove('analyzing');
-      meter.classList.add('on');mfill.classList.add('go');setTimeout(function(){mfill.style.width='82%';},60);countUp(82);
-      mnote.textContent="Strong — worth disputing. (ParkScan won't fake a case when the rules aren't on your side.)";
-      typeIt(ltbody,LETTER,function(){ltfoot.classList.add('on');});
+      meter.classList.add('on');if(c.tone==='bad')meter.classList.add('weak');mfill.classList.add('go');setTimeout(function(){mfill.style.width=c.pct+'%';},60);countUp(c.pct);
+      mnote.textContent=c.note;lthead.textContent=c.lthead;
+      typeIt(ltbody,c.body,function(){if(c.foot)ltfoot.classList.add('on');});
       btn.disabled=false;btn.textContent='Draft again';
     },1550);
   });
-  ltcopy.addEventListener('click',function(){try{navigator.clipboard.writeText(LETTER);}catch(e){}ltcopy.textContent='Copied ✓';setTimeout(function(){ltcopy.textContent='Copy letter';},1600);});
+  document.getElementById('dtoggle').addEventListener('click',function(e){var b=e.target.closest('.dtog');if(b)select(b.getAttribute('data-c'));});
+  ltcopy.addEventListener('click',function(){try{navigator.clipboard.writeText(CASES[cur].body);}catch(e){}ltcopy.textContent='Copied ✓';setTimeout(function(){ltcopy.textContent='Copy letter';},1600);});
+  select('strong');
 })();
 </script>
 <section class="gallery"><div class="wrap">
